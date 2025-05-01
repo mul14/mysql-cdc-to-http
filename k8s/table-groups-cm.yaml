@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-cdc-table-groups-config
+  labels:
+    app: myapp-cdc
+data:
+  table_groups.yaml: |-
+    db1:
+      - table1
+      - table2
+      - table3
+    db2:
+      - table1
+      - table2
+      - table3

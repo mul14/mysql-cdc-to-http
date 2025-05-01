@@ -1,0 +1,10 @@
+db1:
+  - table1
+  - table2
+  - table3
+
+# db2:
+#   - table1
+#   - table2
+#   - table3
+#

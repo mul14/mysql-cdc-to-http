@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-cdc
+  labels:
+    app: myapp-cdc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-cdc
+  template:
+    metadata:
+      labels:
+        app: myapp-cdc
+    spec:
+      containers:
+        - name: myapp-cdc
+          image: mul14/mysql-cdc-to-http:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: myapp-cdc-config
+            - secretRef:
+                name: myapp-cdc-secret
+          volumeMounts:
+            - name: storage
+              mountPath: /app/storage
+            - name: table-groups-config
+              mountPath: /app/config/table_groups.yaml
+              subPath: table_groups.yaml
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: myapp-cdc-pvc
+        - name: table-groups-config
+          configMap:
+            name: myapp-cdc-table-groups-config
+      imagePullSecrets:
+        - name: regcred
